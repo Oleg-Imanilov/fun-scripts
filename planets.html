@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Solar System Viewer</title>
+  <style>
+    body{background:#000;color:#fff;text-align:center;font-family:sans-serif}
+    canvas{background:#000;display:block;margin:1em auto;border:1px solid #444;cursor:grab}
+    .controls{margin:10px}
+    #dateBox{width:180px;padding:4px;border:1px solid #666;background:#111;
+             color:#0f0;text-align:center;font-size:16px;cursor:ns-resize}
+    canvas:active{cursor:grabbing}
+  </style>
+</head>
+<body>
+  <h2>Solar System Viewer (scroll date • wheel zoom • drag pan)</h2>
+  <div class="controls">
+    <label>Date: <input type="text" id="dateBox" readonly></label>&nbsp;&nbsp;
+    <label><input type="checkbox" id="scaleToggle"> Real scale (AU)</label>
+  </div>
+  <canvas id="solar" width="800" height="800"></canvas>
+
+  <script>
+  /* ------------ setup ------------ */
+  const canvas = document.getElementById("solar"), ctx = canvas.getContext("2d");
+  const dateBox = document.getElementById("dateBox"), scaleToggle = document.getElementById("scaleToggle");
+  const CW = canvas.width, CH = canvas.height, MS_DAY = 86_400_000;
+  const epoch = Date.UTC(2000,0,1,12,0,0);
+  const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+  /* Planets + Pluto (sidereal period days, J2000 mean longitude deg, AU) */
+  const planets = [
+    {name:"Mercury",order:1,radius:0.387,   color:"gray",       period:  87.969,  lon0:252.25084},
+    {name:"Venus",  order:2,radius:0.723,   color:"orange",     period: 224.700,  lon0:181.97973},
+    {name:"Earth",  order:3,radius:1.000,   color:"blue",       period: 365.256,  lon0:100.46435},
+    {name:"Mars",   order:4,radius:1.524,   color:"red",        period: 686.980,  lon0:355.45332},
+    {name:"Jupiter",order:5,radius:5.203,   color:"tan",        period:4332.589,  lon0: 34.40438},
+    {name:"Saturn", order:6,radius:9.537,   color:"gold",       period:10759.22,  lon0: 49.94432},
+    {name:"Uranus", order:7,radius:19.191,  color:"lightblue",  period:30685.4,   lon0:313.23218},
+    {name:"Neptune",order:8,radius:30.068,  color:"purple",     period:60189.0,   lon0:304.88003},
+    /* Pluto (dwarf planet) — NASA NSSDCA J2000 elements */
+    {name:"Pluto",  order:9,radius:39.48168677,color:"plum",    period:90560.0,   lon0:238.92881} // AU, days, deg
+  ];
+  planets.forEach(p=>{ p.ω = 2*Math.PI/(p.period*MS_DAY); p.lon0R = p.lon0*Math.PI/180; });
+
+  /* view state */
+  let zoom = 1, panX = 0, panY = 0, currentDate = new Date();
+
+  /* helpers */
+  const setBox = d => dateBox.value = `${d.getUTCFullYear()} - ${MON[d.getUTCMonth()]} - ${String(d.getUTCDate()).padStart(2,"0")}`;
+
+  function draw(d){
+    ctx.clearRect(0,0,CW,CH);
+    const t = d.getTime();
+    const useReal = scaleToggle.checked;
+
+    // Auto-fit scale so outermost orbit ~45% of canvas
+    const maxR = useReal
+      ? Math.max(...planets.map(p=>p.radius))
+      : Math.max(...planets.map(p=>p.order));
+    const scale = zoom * (Math.min(CW,CH)*0.45 / maxR);
+
+    const cx = CW/2 + panX, cy = CH/2 + panY;
+
+    let ex=0, ey=0;
+    const posScreen={}, posReal={};
+
+    planets.forEach(p=>{
+      const θ = (p.lon0R + p.ω*(t-epoch)) % (2*Math.PI); // J2000-based angle
+      const dispR = useReal ? p.radius : p.order;
+      posScreen[p.name] = {x:dispR*Math.cos(θ),    y:dispR*Math.sin(θ)};
+      posReal  [p.name] = {x:p.radius*Math.cos(θ), y:p.radius*Math.sin(θ)};
+      if(p.name==="Earth"){ex=posReal[p.name].x; ey=posReal[p.name].y;}
+    });
+
+    /* dashed orbits */
+    ctx.setLineDash([5,5]);
+    planets.forEach(p=>{
+      ctx.beginPath(); ctx.strokeStyle=p.color;
+      ctx.arc(cx,cy,(useReal? p.radius : p.order)*scale,0,2*Math.PI); ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    /* Sun */
+    ctx.beginPath(); ctx.arc(cx,cy,8,0,2*Math.PI);
+    ctx.fillStyle="yellow"; ctx.fill();
+    ctx.fillStyle="#fff"; ctx.font="14px sans-serif";
+    ctx.fillText(`Sun (${Math.hypot(ex,ey).toFixed(2)} AU)`,cx+10,cy+5);
+
+    /* bodies */
+    planets.forEach(p=>{
+      const s=posScreen[p.name], r=posReal[p.name];
+      const sx=cx+s.x*scale, sy=cy+s.y*scale;
+      ctx.beginPath(); ctx.arc(sx,sy,5,0,2*Math.PI);
+      ctx.fillStyle=p.color; ctx.fill();
+      ctx.fillStyle="#fff";
+      ctx.fillText(`${p.name} (${Math.hypot(r.x-ex,r.y-ey).toFixed(2)} AU)`,sx+8,sy+5);
+    });
+  }
+
+  /* date scroll */
+  dateBox.addEventListener("wheel",e=>{
+    e.preventDefault();
+    currentDate = new Date(currentDate.getTime() + (e.deltaY<0 ? MS_DAY : -MS_DAY));
+    setBox(currentDate); draw(currentDate);
+  });
+
+  /* zoom */
+  canvas.addEventListener("wheel",e=>{
+    e.preventDefault(); zoom *= e.deltaY<0 ? 1.1 : 0.9; draw(currentDate);
+  });
+
+  /* pan */
+  let dragging=false,lastX=0,lastY=0;
+  canvas.addEventListener("mousedown",e=>{dragging=true; lastX=e.clientX; lastY=e.clientY;});
+  canvas.addEventListener("mousemove",e=>{
+    if(!dragging) return;
+    panX += e.clientX-lastX; panY += e.clientY-lastY;
+    lastX = e.clientX; lastY = e.clientY; draw(currentDate);
+  });
+  ["mouseup","mouseleave"].forEach(ev=>canvas.addEventListener(ev,()=>dragging=false));
+
+  /* scale toggle */
+  scaleToggle.addEventListener("change",()=>{zoom=1; panX=panY=0; draw(currentDate);});
+
+  /* init */
+  setBox(currentDate); draw(currentDate);
+  </script>
+</body>
+</html>
