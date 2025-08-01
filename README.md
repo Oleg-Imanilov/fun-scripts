@@ -16,13 +16,11 @@ An interactive visualization of our solar system with real astronomical data. Ex
 - Accurate orbital mechanics based on J2000 epoch data
 
 ### 💀 Text Doom
-A minimalist text-based shooter inspired by DOOM. Navigate rooms, fight monsters, and survive using only your keyboard and imagination.
-- ASCII-style room layouts and enemies
-- Simple controls: move, shoot, and pick up items
-- Randomized levels for replayability
-- Fast-paced gameplay in under 300 lines of code
+text-based 2.5D graphics demonstration
+- ASCII-style room layouts
+- Simple controls: move around
 
 ---
 
-Stay tuned for more interactive experiences, games, and creative coding experiments!
+Stay tuned for more interactive experiences, and coding experiments!
 
