@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Scripts Collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .scripts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .script-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .script-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .script-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .script-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .script-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .script-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .script-features li {
+            padding: 0.3rem 0;
+            color: #555;
+        }
+
+        .script-features li::before {
+            content: '✨';
+            margin-right: 0.5rem;
+        }
+
+        .launch-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .launch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .coming-soon {
+            text-align: center;
+            background: white;
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coming-soon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ffeaa7, #fab1a0);
+        }
+
+        .coming-soon h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .coming-soon p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #ffeaa7;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #fdcb6e;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .script-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Collection note -->
+        <div class="collection-note" style="text-align:center; color:#fff; margin-bottom:1.5rem; font-size:1.1rem; opacity:0.95;">
+            This collection features small web scripts, each under 300 lines (HTML, CSS, JS combined). Some are simple, but a few may impress!
+        </div>
+
+        <div class="header">
+            <h1>🎮 Fun Scripts Collection</h1>
+            <p>Interactive web experiences and creative coding experiments</p>
+        </div>
+
+        <div class="scripts-grid">
+            <div class="script-card">
+                <div class="script-title">🪐 Solar System Viewer</div>
+                <div class="script-description">
+                    An interactive visualization of our solar system with real astronomical data. 
+                    Explore planetary positions and distances in real-time with smooth animations and controls.
+                </div>
+                <ul class="script-features">
+                    <li>Interactive date scrolling to see planetary positions over time</li>
+                    <li>Real-scale toggle between proportional and astronomical units</li>
+                    <li>Zoom and pan controls for detailed exploration</li>
+                    <li>Real-time distance calculations between planets</li>
+                    <li>Accurate orbital mechanics based on J2000 epoch data</li>
+                </ul>
+                <a href="planets.html" class="launch-btn">🚀 Launch Solar System</a>
+            </div>
+            <div class="script-card">
+                <div class="script-title">💀 Text Doom</div>
+                <div class="script-description">
+                    A minimalist text-based 2.5D graphics demonstration inspired by DOOM. 
+                </div>
+                <ul class="script-features">
+                    <li>ASCII-style room layouts (no enemies)</li>
+                    <li>Simple controls: to move around</li>
+                    <li>Fast-paced gameplay in under 300 lines of code</li>
+                </ul>
+                <a href="text-doom.html" class="launch-btn">💥 Play Text Doom</a>
+            </div>
+        </div>
+
+        <div class="coming-soon">
+            <h2>🔮 More Fun Scripts Coming Soon!</h2>
+            <p>Stay tuned for more interactive experiences, games, and creative coding experiments.</p>
+        </div>
+
+        <div class="footer">
+            <p>Built with ❤️ and JavaScript | Last updated: August 2025</p>
+            <p><a href="https://github.com/Oleg-Imanilov/fun-scripts" target="_blank">📁 View Source Code on GitHub</a></p>
+        </div>
+    </div>
+</body>
+</html>
