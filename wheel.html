@@ -4,283 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Name Wheel Wizard</title>
-  <style>
-    :root{
-      --bg1:#0f1020; --bg2:#112d4e; --card:rgba(255,255,255,.09);
-      --text:#f6f7ff; --muted:rgba(255,255,255,.75);
-      --accent:#ff3d8d; --accent2:#2ee6a6; --accent3:#6c63ff;
-      --shadow: 0 18px 60px rgba(0,0,0,.35);
-      --radius: 18px;
-    }
-    *{box-sizing:border-box}
-    html, body{
-      margin:0;
-      padding:0;
-      height:100%;
-      width:100%;
-    }
-    body{
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 700px at 20% 10%, rgba(255,61,141,.28), transparent 60%),
-        radial-gradient(1000px 600px at 80% 20%, rgba(46,230,166,.22), transparent 60%),
-        radial-gradient(900px 650px at 55% 90%, rgba(108,99,255,.22), transparent 60%),
-        linear-gradient(160deg, var(--bg1), var(--bg2));
-      display:flex;
-      align-items:stretch;
-      justify-content:center;
-      padding:18px;
-    }
-
-    .app{
-      width:min(980px, 100%);
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-      flex:1;
-    }
-    header{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 16px;
-      background:linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
-      border:1px solid rgba(255,255,255,.14);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-    header .title{
-      display:flex; gap:10px; align-items:center;
-    }
-    .badge{
-      width:36px; height:36px; border-radius:12px;
-      background: conic-gradient(from 60deg, #ff3d8d, #ffd166, #2ee6a6, #4cc9f0, #6c63ff, #ff3d8d);
-      box-shadow: 0 10px 25px rgba(0,0,0,.35);
-      border:1px solid rgba(255,255,255,.25);
-    }
-    h1{
-      font-size:16px; margin:0;
-      letter-spacing:.2px;
-    }
-    .sub{
-      font-size:12px; color:var(--muted); margin-top:2px;
-    }
-    .header-right{
-      display:flex; gap:10px; align-items:center;
-      font-size:12px; color:var(--muted);
-    }
-
-    .card{
-      background:linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-      border:1px solid rgba(255,255,255,.14);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      padding:16px;
-    }
-
-    .wizard{
-      display:grid;
-      gap:14px;
-      grid-template-columns: 1fr;
-    }
-
-    .steps{
-      display:flex; gap:8px; flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-start;
-    }
-    .step{
-      display:flex; align-items:center; gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.06);
-      font-size:12px;
-      color:var(--muted);
-    }
-    .dot{
-      width:10px; height:10px; border-radius:50%;
-      background:rgba(255,255,255,.28);
-      box-shadow: 0 0 0 4px rgba(255,255,255,.08) inset;
-    }
-    .step.active{
-      color:var(--text);
-      border-color: rgba(255,255,255,.25);
-      background: linear-gradient(135deg, rgba(255,61,141,.22), rgba(46,230,166,.12));
-    }
-    .step.active .dot{
-      background: conic-gradient(from 20deg, #ff3d8d, #ffd166, #2ee6a6, #4cc9f0, #6c63ff, #ff3d8d);
-      box-shadow: 0 0 0 4px rgba(255,255,255,.12) inset, 0 0 18px rgba(255,61,141,.25);
-    }
-
-    .grid{
-      display:grid;
-      gap:14px;
-      grid-template-columns: 1fr;
-    }
-
-    @media (min-width: 860px){
-      .grid{ grid-template-columns: 0.95fr 1.05fr; align-items:start; }
-    }
-
-    textarea{
-      width:100%;
-      min-height: 190px;
-      resize: vertical;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.18);
-      outline:none;
-      background: rgba(15,16,32,.45);
-      color:var(--text);
-      font-size:14px;
-      line-height:1.35;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
-    }
-    textarea::placeholder{ color:rgba(255,255,255,.55); }
-
-    .row{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-    }
-
-    button{
-      appearance:none;
-      border:0;
-      border-radius: 14px;
-      padding: 12px 14px;
-      font-weight:700;
-      color: var(--text);
-      cursor:pointer;
-      box-shadow: 0 14px 34px rgba(0,0,0,.28);
-      transition: transform .08s ease, filter .2s ease, opacity .2s ease;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-    }
-    button:active{ transform: translateY(1px) scale(.99); }
-    button:disabled{ opacity:.55; cursor:not-allowed; filter:saturate(.7); }
-
-    .btn-primary{
-      background: linear-gradient(135deg, #ff3d8d, #6c63ff);
-    }
-    .btn-ghost{
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.16);
-      box-shadow: none;
-      font-weight:600;
-      color: var(--muted);
-    }
-    .btn-danger{
-      background: linear-gradient(135deg, #ff5a5f, #ff3d8d);
-    }
-
-    .hint{
-      font-size:12px; color:var(--muted);
-      line-height:1.35;
-    }
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.14);
-      font-size:12px;
-      color:var(--muted);
-    }
-
-    /* Wheel area */
-    .wheel-wrap{
-      display:grid;
-      gap:12px;
-      justify-items:center;
-    }
-    .wheel-stage{
-      width:min(360px, 92vw);
-      aspect-ratio: 1 / 1;
-      position:relative;
-      display:grid;
-      place-items:center;
-      padding: 10px;
-    }
-    canvas{
-      width:100%;
-      height:100%;
-      border-radius: 50%;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.16);
-      box-shadow: 0 20px 65px rgba(0,0,0,.35);
-    }
-    .pointer{
-      position:absolute;
-      top:-6px;
-      left:50%;
-      transform: translateX(-50%);
-      width:0; height:0;
-      border-left: 16px solid transparent;
-      border-right: 16px solid transparent;
-      border-bottom: 26px solid rgba(255,255,255,.95);
-      filter: drop-shadow(0 8px 10px rgba(0,0,0,.35));
-    }
-    .pointer::after{
-      content:"";
-      position:absolute;
-      left:-12px;
-      top:4px;
-      width:0; height:0;
-      border-left: 12px solid transparent;
-      border-right: 12px solid transparent;
-      border-bottom: 20px solid rgba(255,61,141,.85);
-      transform: translateY(2px);
-      filter: drop-shadow(0 4px 8px rgba(255,61,141,.25));
-    }
-
-    .winner{
-      width:min(520px, 100%);
-      text-align:center;
-      padding:12px 14px;
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.16);
-      background: linear-gradient(135deg, rgba(46,230,166,.14), rgba(255,209,102,.12), rgba(255,61,141,.10));
-    }
-    .winner .label{
-      font-size:12px; color:var(--muted); margin-bottom:6px;
-    }
-    .winner .name{
-      font-size:20px; font-weight:900; letter-spacing:.2px;
-      text-shadow: 0 10px 25px rgba(0,0,0,.25);
-      word-break: break-word;
-    }
-
-    .list{
-      width:100%;
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      justify-content:center;
-    }
-    .chip{
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.07);
-      font-size:12px;
-      color:var(--text);
-      max-width: 100%;
-    }
-
-    .fade{
-      animation: fadeIn .25s ease both;
-    }
-    @keyframes fadeIn{
-      from{ opacity:0; transform: translateY(6px); }
-      to{ opacity:1; transform: translateY(0); }
-    }
-
-    .tiny{
-      font-size:11px; color:rgba(255,255,255,.6);
-      text-align:center;
-    }
-  </style>
+  <link rel="stylesheet" href="wheel.css" />
 </head>
 <body>
   <div class="app">
@@ -292,10 +16,6 @@
           <div class="sub">Paste names → spin → winner removed → repeat</div>
         </div>
       </div>
-      <div class="header-right">
-        <span class="pill">Names: <b id="count" style="color:var(--text);font-weight:800;margin-left:6px;">0</b></span>
-        <span class="pill">Step: <b id="stepLabel" style="color:var(--text);font-weight:800;margin-left:6px;">Input</b></span>
-      </div>
     </header>
 
     <div class="card wizard">
@@ -305,30 +25,32 @@
         <div class="step" id="s3"><span class="dot"></span>3. Finish</div>
       </div>
 
-      <div class="grid">
+      <div>
         <!-- Left: Input -->
-        <section id="panelInput" class="card fade" style="box-shadow:none;">
-          <h2 style="margin:0 0 8px 0;font-size:16px;">1) Enter names</h2>
-          <div class="hint" style="margin-bottom:10px;">
+        <section id="panelInput" class="fade" style="width:100%;padding:20px;">
+            <span></span>
+          <!-- <h2 style="margin:0 0 12px 0;font-size:clamp(15px, 4vw, 16px);">1) Enter names</h2> -->
+          <div class="hint" style="margin-bottom:12px;">
             One per line (or comma-separated). Empty lines ignored. Duplicates kept (you can edit them).
           </div>
           <textarea id="namesText" placeholder="Alice&#10;Bob&#10;Charlie&#10;..."></textarea>
-          <div class="row" style="margin-top:10px;">
+          <div class="row" style="margin-top:12px;">
             <button class="btn-primary" id="btnStart">Start wheel</button>
             <button class="btn-ghost" id="btnSample" type="button">Use sample</button>
             <button class="btn-ghost" id="btnClear" type="button">Clear</button>
           </div>
-          <div class="hint" style="margin-top:10px;">
+          <div class="hint" style="margin-top:12px;">
             Tip: On mobile, paste directly from Notes/Contacts. You can also separate by commas.
           </div>
         </section>
 
         <!-- Right: Wheel -->
-        <section id="panelWheel" class="card fade" style="box-shadow:none; display:none;">
+        <section id="panelWheel" class="fade" style="width:100%;display:none;padding:20px 12px;">
           <div class="wheel-wrap">
-            <div style="display:flex; gap:10px; align-items:center; justify-content:space-between; width:100%;">
-              <h2 style="margin:0;font-size:16px;">2) Spin the wheel</h2>
-              <span class="pill">Remaining: <b id="remaining" style="color:var(--text);font-weight:900;margin-left:6px;">0</b></span>
+            <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; width:100%; flex-wrap:wrap;">
+              <!-- <h2 style="margin:0;font-size:clamp(15px, 4vw, 16px);">2) Spin the wheel</h2> -->
+              <span></span>
+              <span class="pill">Remaining: <b id="remaining" style="color:var(--text);font-weight:900;margin-left:4px;">0</b></span>
             </div>
 
             <div class="wheel-stage" aria-label="Spinning wheel">
@@ -342,11 +64,18 @@
             </div>
 
             <div class="row" style="justify-content:center;">
-              <button class="btn-primary" id="btnSpin">Spin</button>
               <button class="btn-danger" id="btnReset" type="button">Back to input</button>
             </div>
 
-            <div class="list" id="chips"></div>
+            <div id="winnersSection" style="display:none; width:100%;">
+              <h3 style="margin:12px 0 8px 0; font-size:clamp(13px, 3.5vw, 14px); text-align:center; color:var(--muted);">🏆 Winners (in order)</h3>
+              <div class="list" id="winners"></div>
+            </div>
+
+            <div id="remainingSection" style="width:100%;">
+              <h3 style="margin:12px 0 8px 0; font-size:clamp(13px, 3.5vw, 14px); text-align:center; color:var(--muted);">Remaining</h3>
+              <div class="list" id="chips"></div>
+            </div>
             <div class="tiny">Wheel stops on a random name. Winner is removed automatically.</div>
           </div>
         </section>
@@ -354,355 +83,6 @@
     </div>
   </div>
 
-  <script>
-    // --- State ---
-    const state = {
-      names: [],
-      spinning: false,
-      angle: 0,     // radians
-      targetAngle: 0,
-      spinStart: 0,
-      spinDur: 0,
-      winnerIndex: -1
-    };
-
-    // --- Elements ---
-    const el = {
-      namesText: document.getElementById('namesText'),
-      btnStart: document.getElementById('btnStart'),
-      btnSpin: document.getElementById('btnSpin'),
-      btnReset: document.getElementById('btnReset'),
-      btnSample: document.getElementById('btnSample'),
-      btnClear: document.getElementById('btnClear'),
-      panelInput: document.getElementById('panelInput'),
-      panelWheel: document.getElementById('panelWheel'),
-      count: document.getElementById('count'),
-      remaining: document.getElementById('remaining'),
-      chips: document.getElementById('chips'),
-      winnerBox: document.getElementById('winnerBox'),
-      winnerName: document.getElementById('winnerName'),
-      winnerLabel: document.getElementById('winnerLabel'),
-      stepLabel: document.getElementById('stepLabel'),
-      s1: document.getElementById('s1'),
-      s2: document.getElementById('s2'),
-      s3: document.getElementById('s3'),
-      canvas: document.getElementById('wheel'),
-    };
-
-    const ctx = el.canvas.getContext('2d');
-
-    // --- Helpers ---
-    function parseNames(raw){
-      return raw
-        .replace(/\r/g, '\n')
-        .split(/\n|,/)
-        .map(s => s.trim())
-        .filter(Boolean);
-    }
-
-    function setStep(step){
-      // step: 1 input, 2 spin, 3 finish
-      el.s1.classList.toggle('active', step === 1);
-      el.s2.classList.toggle('active', step === 2);
-      el.s3.classList.toggle('active', step === 3);
-      el.stepLabel.textContent = step === 1 ? 'Input' : (step === 2 ? 'Spin' : 'Finish');
-    }
-
-    function updateCounts(){
-      el.count.textContent = state.names.length;
-      el.remaining.textContent = state.names.length;
-    }
-
-    function renderChips(){
-      el.chips.innerHTML = '';
-      state.names.forEach(n=>{
-        const d = document.createElement('div');
-        d.className = 'chip';
-        d.textContent = n;
-        el.chips.appendChild(d);
-      });
-    }
-
-    function niceFontSize(nameCount){
-      if (nameCount <= 6) return 28;
-      if (nameCount <= 12) return 22;
-      if (nameCount <= 24) return 18;
-      return 15;
-    }
-
-    // Colorful palette for slices
-    const palette = [
-      '#ff3d8d','#ffd166','#2ee6a6','#4cc9f0','#6c63ff',
-      '#f72585','#b5179e','#7209b7','#3a0ca3','#4361ee',
-      '#4895ef','#4cc9f0','#06d6a0','#ffd166','#ef476f'
-    ];
-
-    function drawWheel(){
-      const N = state.names.length;
-      const {width:w, height:h} = el.canvas;
-      ctx.clearRect(0,0,w,h);
-
-      // background ring glow
-      ctx.save();
-      ctx.translate(w/2, h/2);
-      ctx.beginPath();
-      ctx.arc(0,0,w*0.49,0,Math.PI*2);
-      ctx.closePath();
-      ctx.shadowColor = 'rgba(255,61,141,.25)';
-      ctx.shadowBlur = 30;
-      ctx.fillStyle = 'rgba(255,255,255,.04)';
-      ctx.fill();
-      ctx.restore();
-
-      if (N === 0){
-        ctx.save();
-        ctx.translate(w/2,h/2);
-        ctx.fillStyle = 'rgba(255,255,255,.85)';
-        ctx.font = '700 26px system-ui';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('Add some names', 0, 0);
-        ctx.restore();
-        return;
-      }
-
-      const r = w * 0.45;
-      const cx = w/2, cy = h/2;
-      const slice = (Math.PI * 2) / N;
-
-      // wheel rotation
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate(state.angle);
-
-      for(let i=0;i<N;i++){
-        const start = i * slice;
-        const end = start + slice;
-
-        // slice
-        ctx.beginPath();
-        ctx.moveTo(0,0);
-        ctx.arc(0,0,r,start,end);
-        ctx.closePath();
-
-        const c = palette[i % palette.length];
-        ctx.fillStyle = c;
-        ctx.fill();
-
-        // slice divider
-        ctx.strokeStyle = 'rgba(255,255,255,.7)';
-        ctx.lineWidth = 3;
-        ctx.stroke();
-
-        // text
-        const mid = start + slice/2;
-        ctx.save();
-        ctx.rotate(mid);
-        ctx.translate(r*0.62, 0);
-        ctx.rotate(Math.PI/2);
-
-        ctx.fillStyle = 'rgba(15,16,32,.95)';
-        ctx.font = `900 ${niceFontSize(N)}px system-ui`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-
-        const label = state.names[i];
-        const maxWidth = r*0.92;
-        // shrink-to-fit
-        let size = niceFontSize(N);
-        while(size > 12){
-          ctx.font = `900 ${size}px system-ui`;
-          if (ctx.measureText(label).width <= maxWidth) break;
-          size -= 1;
-        }
-        // subtle text shadow
-        ctx.shadowColor = 'rgba(255,255,255,.5)';
-        ctx.shadowBlur = 0;
-        ctx.fillText(label, 0, 0);
-
-        ctx.restore();
-      }
-
-      // center cap
-      ctx.beginPath();
-      ctx.arc(0,0,r*0.18,0,Math.PI*2);
-      ctx.fillStyle = 'rgba(255,255,255,.92)';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(0,0,0,.15)';
-      ctx.lineWidth = 8;
-      ctx.stroke();
-
-      ctx.fillStyle = 'rgba(15,16,32,.9)';
-      ctx.font = '900 22px system-ui';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('SPIN', 0, 0);
-
-      ctx.restore();
-    }
-
-    function winnerFromAngle(){
-      // pointer is at top (-90deg). We want which slice lands there.
-      const N = state.names.length;
-      if (N === 0) return -1;
-      const twoPi = Math.PI * 2;
-      const a = ((twoPi - (state.angle % twoPi)) + twoPi) % twoPi; // wheel angle inverted
-      const pointerAngle = (Math.PI * 1.5); // top in wheel coords after our mapping
-      const effective = (a + pointerAngle) % twoPi;
-      const slice = twoPi / N;
-      return Math.floor(effective / slice) % N;
-    }
-
-    function easeOutCubic(t){ return 1 - Math.pow(1-t, 3); }
-
-    function spin(){
-      if (state.spinning) return;
-      const N = state.names.length;
-      if (N < 2){
-        // Finish
-        showWinnerFinal();
-        return;
-      }
-
-      el.winnerBox.style.display = 'none';
-
-      state.spinning = true;
-      el.btnSpin.disabled = true;
-      el.btnReset.disabled = true;
-
-      const now = performance.now();
-      state.spinStart = now;
-      state.spinDur = 5000 + Math.random()*1000; // 5-6s (slower, with 5s slowdown)
-      const extraTurns = 4 + Math.random()*3;     // 4-7 turns (fewer turns for slower spin)
-      const randOffset = Math.random() * Math.PI * 2;
-
-      const startAngle = state.angle;
-      state.targetAngle = state.angle + (extraTurns * Math.PI * 2) + randOffset;
-
-      function tick(t){
-        const p = Math.min(1, (t - state.spinStart)/state.spinDur);
-        const e = easeOutCubic(p);
-        state.angle = startAngle + (state.targetAngle - startAngle) * e;
-
-        drawWheel();
-
-        if (p < 1){
-          requestAnimationFrame(tick);
-        } else {
-          // stabilize final angle
-          state.angle = state.targetAngle % (Math.PI*2);
-          drawWheel();
-
-          state.winnerIndex = winnerFromAngle();
-          const winner = state.names[state.winnerIndex];
-
-          el.winnerLabel.textContent = 'Winner (removed)';
-          el.winnerName.textContent = winner ?? '—';
-          el.winnerBox.style.display = 'block';
-
-          // remove winner
-          if (state.winnerIndex >= 0) state.names.splice(state.winnerIndex, 1);
-
-          updateCounts();
-          renderChips();
-          drawWheel();
-
-          state.spinning = false;
-
-          // if 1 left, show final
-          if (state.names.length === 1){
-            showWinnerFinal();
-          } else {
-            el.btnSpin.disabled = false;
-            el.btnReset.disabled = false;
-          }
-        }
-      }
-      requestAnimationFrame(tick);
-    }
-
-    function showWheel(){
-      el.panelInput.style.display = 'none';
-      el.panelWheel.style.display = 'block';
-      setStep(2);
-      updateCounts();
-      renderChips();
-      drawWheel();
-      el.btnSpin.disabled = false;
-    }
-
-    function showInput(){
-      el.panelWheel.style.display = 'none';
-      el.panelInput.style.display = 'block';
-      el.winnerBox.style.display = 'none';
-      setStep(1);
-      state.spinning = false;
-      state.angle = 0;
-      state.targetAngle = 0;
-      state.winnerIndex = -1;
-      el.btnSpin.disabled = false;
-      el.btnReset.disabled = false;
-      drawWheel();
-      updateCounts();
-    }
-
-    function showWinnerFinal(){
-      setStep(3);
-      el.btnSpin.disabled = true;
-      el.btnReset.disabled = false;
-
-      const finalName = state.names[0] ?? '—';
-      el.winnerLabel.textContent = 'Final winner 🎉';
-      el.winnerName.textContent = finalName;
-      el.winnerBox.style.display = 'block';
-      drawWheel();
-    }
-
-    // --- Events ---
-    el.btnStart.addEventListener('click', ()=>{
-      const names = parseNames(el.namesText.value);
-      if (names.length < 2){
-        alert('Please enter at least 2 names.');
-        return;
-      }
-      state.names = names;
-      updateCounts();
-      showWheel();
-    });
-
-    el.btnSpin.addEventListener('click', spin);
-
-    el.btnReset.addEventListener('click', ()=>{
-      // go back to input
-      state.names = [];
-      updateCounts();
-      renderChips();
-      showInput();
-      setStep(1);
-    });
-
-    el.btnSample.addEventListener('click', ()=>{
-      el.namesText.value = [
-        'Alice','Bob','Charlie','Diana','Ethan','Fatima','George','Hana'
-      ].join('\n');
-    });
-
-    el.btnClear.addEventListener('click', ()=>{
-      el.namesText.value = '';
-      el.namesText.focus();
-    });
-
-    // Initial draw
-    setStep(1);
-    updateCounts();
-    drawWheel();
-
-    // Better touch: allow Enter on mobile keyboard to start if textarea focused (Ctrl+Enter on desktop)
-    el.namesText.addEventListener('keydown', (e)=>{
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter'){
-        el.btnStart.click();
-      }
-    });
-  </script>
+  <script src="wheel.js"></script>
 </body>
 </html>
