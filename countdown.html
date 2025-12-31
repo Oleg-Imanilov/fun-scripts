@@ -268,6 +268,180 @@
             margin-left: -4.5px;
             background: rgba(255, 255, 255, 0.9);
         }
+
+        /* Mobile responsive styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.5rem;
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto;
+                justify-content: flex-start;
+                padding-top: 1.5rem;
+                padding-bottom: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 1rem;
+            }
+
+            .clock {
+                width: 280px;
+                height: 280px;
+                margin: 0 auto 1.5rem;
+                border: 6px solid rgba(255, 255, 255, 0.3);
+            }
+
+            .clock::before {
+                width: 20px;
+                height: 20px;
+            }
+
+            .hour-hand {
+                width: 8px;
+                height: 75px;
+                margin-left: -4px;
+            }
+
+            .minute-hand {
+                width: 6px;
+                height: 100px;
+                margin-left: -3px;
+            }
+
+            .second-hand {
+                width: 3px;
+                height: 120px;
+                margin-left: -1.5px;
+            }
+
+            .clock-marker {
+                width: 4px;
+                height: 15px;
+                top: 5px;
+                margin-left: -2px;
+                transform-origin: 50% 130px;
+            }
+
+            .clock-marker.major {
+                width: 6px;
+                height: 24px;
+                margin-left: -3px;
+            }
+
+            .countdown {
+                gap: 0.75rem;
+            }
+
+            .time-unit {
+                padding: 1rem 0.75rem;
+                min-width: 140px;
+            }
+
+            .number-container {
+                height: 5rem;
+            }
+
+            .number-bg, .number {
+                font-size: 5rem;
+            }
+
+            .label {
+                font-size: 0.9rem;
+            }
+
+            .message {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.75rem 0.5rem;
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .clock {
+                width: 220px;
+                height: 220px;
+                margin: 0 auto 0.75rem;
+                border: 5px solid rgba(255, 255, 255, 0.3);
+            }
+
+            .clock::before {
+                width: 16px;
+                height: 16px;
+            }
+
+            .hour-hand {
+                width: 7px;
+                height: 55px;
+                margin-left: -3.5px;
+            }
+
+            .minute-hand {
+                width: 5px;
+                height: 78px;
+                margin-left: -2.5px;
+            }
+
+            .second-hand {
+                width: 2px;
+                height: 92px;
+                margin-left: -1px;
+            }
+
+            .clock-marker {
+                width: 3px;
+                height: 12px;
+                top: 4px;
+                margin-left: -1.5px;
+                transform-origin: 50% 106px;
+            }
+
+            .clock-marker.major {
+                width: 5px;
+                height: 20px;
+                margin-left: -2.5px;
+            }
+
+            .countdown {
+                gap: 0.5rem;
+                max-width: 360px;
+                margin: 0 auto;
+            }
+
+            .time-unit {
+                padding: 1rem 0.75rem;
+                min-width: 0;
+                flex: 0 0 calc(50% - 0.25rem);
+            }
+
+            .number-container {
+                height: 4.5rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .number-bg, .number {
+                font-size: 4.5rem;
+            }
+
+            .label {
+                font-size: 0.75rem;
+                letter-spacing: 1px;
+            }
+
+            .message {
+                font-size: 1.8rem;
+            }
+        }
     </style>
 </head>
 <body>
